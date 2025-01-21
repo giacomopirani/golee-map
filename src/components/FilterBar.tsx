@@ -1,6 +1,5 @@
 import type React from "react";
 import { useCallback, useState } from "react";
-import logoGolee from "../img/logo-golee-1.svg";
 
 interface FilterBarProps {
   onFilterChange: (filters: {
@@ -28,9 +27,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
   return (
     <nav className="bg-white rounded-lg shadow-lg p-4 max-w-6xl mx-auto">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-        <div className="w-30 flex md:items-center ">
-          <img src={logoGolee} alt="Logo" className="h-10 w-auto mx-30  flex" />
-        </div>
         <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 flex-grow">
           <input
             type="text"
