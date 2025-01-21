@@ -29,12 +29,12 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
     if (mapContainerRef.current && !mapRef.current) {
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
-        minZoom: 4, // Increased to keep focus on Southern Europe
-      }).setView([41.0, 12.0], 5); // Centered on Southern Europe with appropriate zoom
+        minZoom: 4,
+      }).setView([42.5, 10.5], 6);
 
       mapRef.current.setMaxBounds([
-        [30.0, -10.0], // Southwest corner: covers most of North Africa
-        [50.0, 30.0], // Northeast corner: covers up to Central Europe
+        [30.0, -10.0],
+        [50.0, 30.0],
       ]);
 
       L.tileLayer(
@@ -98,7 +98,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
         if (org.address?.coordinates) {
           const customIcon = L.divIcon({
             html: `
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="rgba(255, 0, 0, 0.6)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dot"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="rgba(255, 0, 0, 0.6)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dot"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>
             `,
             className: "custom-div-icon",
             iconSize: [24, 24],
