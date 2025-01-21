@@ -37,16 +37,13 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
         [50.0, 30.0],
       ]);
 
-      L.tileLayer(
-        "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.{ext}",
-        {
-          minZoom: 4, // Match the map's minZoom
-          maxZoom: 18, // Reduced slightly to maintain focus on the region
-          attribution:
-            '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          ext: "png",
-        } as L.TileLayerOptions
-      ).addTo(mapRef.current);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        minZoom: 4, // Match the map's minZoom
+        maxZoom: 18, // Reduced slightly to maintain focus on the region
+        attribution:
+          '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: "png",
+      } as L.TileLayerOptions).addTo(mapRef.current);
 
       L.control
         .zoom({
@@ -59,9 +56,18 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         maxClusterRadius: (zoom) => {
-          return zoom >= 15 ? 10 : 80 - zoom * 5; // Aumenta il raggio del cluster al diminuire dello zoom
+          return zoom >= 15 ? 10 : 60 - zoom * 5;
         },
-        disableClusteringAtZoom: 3, // Disabilita il clustering allo zoom più basso
+        disableClusteringAtZoom: 18,
+        iconCreateFunction: (cluster) => {
+          const childCount = cluster.getChildCount();
+          const size = childCount < 10 ? 30 : childCount < 100 ? 40 : 50;
+          return L.divIcon({
+            html: `<div style="width: ${size}px; height: ${size}px;"><span>${childCount}</span></div>`,
+            className: "custom-cluster-icon",
+            iconSize: L.point(size, size),
+          });
+        },
       });
 
       mapRef.current.addLayer(markerClusterGroupRef.current);
