@@ -4,8 +4,10 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import { fetchOrganizations } from "../api/organization";
 import type { Organization } from "../types/types";
+import OrganizationPopup from "./OrganizationPopup";
 
 interface FullscreenMapProps {
   filters: { name: string; province: string; sport: string };
@@ -38,8 +40,8 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
       ]);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        minZoom: 4, // Match the map's minZoom
-        maxZoom: 18, // Reduced slightly to maintain focus on the region
+        minZoom: 4,
+        maxZoom: 18,
         attribution:
           '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         ext: "png",
@@ -112,19 +114,20 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             popupAnchor: [0, -24],
           });
 
-          const marker = L.marker(org.address.coordinates, { icon: customIcon })
-            .bindPopup(`
-            <strong>${org.name || "Nome non disponibile"}</strong><br>
-            Sport: ${org.sport?.join(", ") || "Non specificato"}<br>
-            Indirizzo: ${org.address.address || ""}, ${
-            org.address.town || ""
-          }<br>
-            <img src="${
-              org.logo_url || "/placeholder.svg?height=100&width=100"
-            }" alt="Logo ${
-            org.name || ""
-          }" style="max-width: 100px; max-height: 100px;">
-          `);
+          const marker = L.marker(org.address.coordinates, {
+            icon: customIcon,
+          });
+
+          const popupContent = ReactDOMServer.renderToString(
+            <OrganizationPopup
+              name={org.name || ""}
+              sport={org.sport || []}
+              address={org.address}
+              logo_url={org.logo_url}
+            />
+          );
+
+          marker.bindPopup(popupContent);
           markerClusterGroupRef.current?.addLayer(marker);
         }
       });
