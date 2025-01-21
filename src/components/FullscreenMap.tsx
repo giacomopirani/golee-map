@@ -4,7 +4,7 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
-import { fetchOrganizations } from "../api/organization.ts";
+import { fetchOrganizations } from "../api/organization";
 import type { Organization } from "../types/types";
 
 interface FullscreenMapProps {
@@ -27,15 +27,23 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
 
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
-      mapRef.current = L.map(mapContainerRef.current).setView(
-        [41.9028, 12.4964],
-        6
-      );
+      mapRef.current = L.map(mapContainerRef.current, {
+        zoomControl: false, // Disabilita i controlli di zoom predefiniti
+        maxZoom: 8, // Imposta lo zoom massimo
+        minZoom: 3, // Imposta lo zoom minimo per vedere l'Europa
+      }).setView([50.0, 15.0], 4); // Centro della mappa sull'Europa
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(mapRef.current);
+
+      // Aggiungi i controlli di zoom in basso a sinistra
+      L.control
+        .zoom({
+          position: "bottomleft",
+        })
+        .addTo(mapRef.current);
 
       markerClusterGroupRef.current = L.markerClusterGroup();
       mapRef.current.addLayer(markerClusterGroupRef.current);
@@ -85,7 +93,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
       });
   }, [organizations, filters]);
 
-  return <div ref={mapContainerRef} className="h-full w-full" />;
+  return <div ref={mapContainerRef} className="h-full w-full z-40" />;
 };
 
 export default FullscreenMap;

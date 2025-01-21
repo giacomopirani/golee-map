@@ -26,33 +26,39 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
   );
 
   return (
-    <div className="bg-white p-4 shadow-md flex space-x-4">
-      <img src={logoGolee} alt="Logo" className="h-10 w-auto space-x-4 mr-3" />
-      <input
-        type="text"
-        name="name"
-        placeholder="Cerca per nome"
-        value={name}
-        onChange={handleInputChange(setName)}
-        className="flex-1 p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="province"
-        placeholder="Filtra per provincia"
-        value={province}
-        onChange={handleInputChange(setProvince)}
-        className="flex-1 p-2 border rounded"
-      />
-      <input
-        type="text"
-        name="sport"
-        placeholder="Filtra per sport"
-        value={sport}
-        onChange={handleInputChange(setSport)}
-        className="flex-1 p-2 border rounded "
-      />
-    </div>
+    <nav className="bg-white rounded-lg shadow-lg p-4 max-w-6xl mx-auto">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+        <div className="w-30 flex md:items-center ">
+          <img src={logoGolee} alt="Logo" className="h-10 w-auto mx-30  flex" />
+        </div>
+        <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 flex-grow">
+          <input
+            type="text"
+            name="name"
+            placeholder="Cerca per nome"
+            value={name}
+            onChange={handleInputChange(setName)}
+            className="flex-1 p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="province"
+            placeholder="Filtra per provincia"
+            value={province}
+            onChange={handleInputChange(setProvince)}
+            className="flex-1 p-2 border rounded"
+          />
+          <input
+            type="text"
+            name="sport"
+            placeholder="Filtra per sport"
+            value={sport}
+            onChange={handleInputChange(setSport)}
+            className="flex-1 p-2 border rounded "
+          />
+        </div>
+      </div>
+    </nav>
   );
 };
 

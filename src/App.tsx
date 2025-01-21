@@ -14,11 +14,11 @@ function App() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col">
-      <FilterBar onFilterChange={handleFilterChange} />
-      <div className="flex-1">
-        <FullscreenMap filters={filters} />
+    <div className="h-screen overflow-hidden">
+      <div className="absolute inset-x-0 top-4 z-50 mx-6">
+        <FilterBar onFilterChange={handleFilterChange} />
       </div>
+      <FullscreenMap filters={filters} />
     </div>
   );
 }
