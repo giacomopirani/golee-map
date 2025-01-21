@@ -28,30 +28,42 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
       mapRef.current = L.map(mapContainerRef.current, {
-        zoomControl: false, // Disabilita i controlli di zoom predefiniti
-        maxZoom: 8, // Imposta lo zoom massimo
-        minZoom: 3, // Imposta lo zoom minimo per vedere l'Europa
-      }).setView([50.0, 15.0], 4); // Centro della mappa sull'Europa
+        zoomControl: false,
+        minZoom: 4, // Increased to keep focus on Southern Europe
+      }).setView([41.0, 12.0], 5); // Centered on Southern Europe with appropriate zoom
+
+      mapRef.current.setMaxBounds([
+        [30.0, -10.0], // Southwest corner: covers most of North Africa
+        [50.0, 30.0], // Northeast corner: covers up to Central Europe
+      ]);
 
       L.tileLayer(
         "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.{ext}",
         {
-          minZoom: 0,
-          maxZoom: 20,
+          minZoom: 4, // Match the map's minZoom
+          maxZoom: 18, // Reduced slightly to maintain focus on the region
           attribution:
             '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           ext: "png",
         } as L.TileLayerOptions
       ).addTo(mapRef.current);
 
-      // Aggiungi i controlli di zoom in basso a sinistra
       L.control
         .zoom({
           position: "bottomleft",
         })
         .addTo(mapRef.current);
 
-      markerClusterGroupRef.current = L.markerClusterGroup();
+      markerClusterGroupRef.current = L.markerClusterGroup({
+        spiderfyOnMaxZoom: false,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        maxClusterRadius: (zoom) => {
+          return zoom >= 15 ? 10 : 80 - zoom * 5; // Aumenta il raggio del cluster al diminuire dello zoom
+        },
+        disableClusteringAtZoom: 3, // Disabilita il clustering allo zoom più basso
+      });
+
       mapRef.current.addLayer(markerClusterGroupRef.current);
     }
 
@@ -84,13 +96,26 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
       })
       .forEach((org) => {
         if (org.address?.coordinates) {
-          const marker = L.marker(org.address.coordinates).bindPopup(`
+          const customIcon = L.divIcon({
+            html: `
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="rgba(255, 0, 0, 0.6)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dot"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>
+            `,
+            className: "custom-div-icon",
+            iconSize: [24, 24],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24],
+          });
+
+          const marker = L.marker(org.address.coordinates, { icon: customIcon })
+            .bindPopup(`
             <strong>${org.name || "Nome non disponibile"}</strong><br>
             Sport: ${org.sport?.join(", ") || "Non specificato"}<br>
             Indirizzo: ${org.address.address || ""}, ${
             org.address.town || ""
           }<br>
-            <img src="${org.logo_url || ""}" alt="Logo ${
+            <img src="${
+              org.logo_url || "/placeholder.svg?height=100&width=100"
+            }" alt="Logo ${
             org.name || ""
           }" style="max-width: 100px; max-height: 100px;">
           `);
