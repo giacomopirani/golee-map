@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { fetchOrganizations } from "../api/organization";
 import type { Organization } from "../types/types";
-import OrganizationPopup from "./OrganizationPopup";
+import OrganizationPopup from "./organization-popup";
 
 interface FullscreenMapProps {
   filters: { name: string; province: string; sport: string };
@@ -31,12 +31,12 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
     if (mapContainerRef.current && !mapRef.current) {
       mapRef.current = L.map(mapContainerRef.current, {
         zoomControl: false,
-        minZoom: 4,
-      }).setView([42.5, 10.5], 6);
+        minZoom: 5,
+      }).setView([42.5, 12.5], 6);
 
       mapRef.current.setMaxBounds([
-        [30.0, -10.0],
-        [50.0, 30.0],
+        [35.0, 6.0],
+        [47.5, 19.0],
       ]);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -127,7 +127,24 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             />
           );
 
-          marker.bindPopup(popupContent);
+          marker.bindPopup(popupContent, {
+            maxWidth: 300,
+            minWidth: 200,
+            autoPan: true,
+            autoPanPadding: [50, 50],
+            keepInView: true,
+          });
+
+          marker.on("popupopen", () => {
+            if (mapRef.current) {
+              const px = mapRef.current.project(marker.getLatLng());
+              px.y -= 200;
+              mapRef.current.panTo(mapRef.current.unproject(px), {
+                animate: true,
+              });
+            }
+          });
+
           markerClusterGroupRef.current?.addLayer(marker);
         }
       });

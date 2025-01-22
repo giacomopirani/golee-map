@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type React from "react";
 
 interface OrganizationPopupProps {
@@ -18,7 +19,8 @@ const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
 }) => {
   return (
     <div className="max-w-sm p-4 bg-white rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold mb-2">
+      <h3 className="text-base  mb-2">
+        <strong className="font-semibold mr-2">Società:</strong>
         {name || "Nome non disponibile"}
       </h3>
       {sport?.length > 0 && (
@@ -44,6 +46,8 @@ const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
           Nessun logo disponibile
         </p>
       )}
+
+      <Button>TEST</Button>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FilterBar from "./components/FilterBar";
-import FullscreenMap from "./components/FullscreenMap";
+import FilterBar from "./components/filter-bar";
+import FullscreenMap from "./components/fullscreen-map";
 
 function App() {
   const [filters, setFilters] = useState({ name: "", province: "", sport: "" });
