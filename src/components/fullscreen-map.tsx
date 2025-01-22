@@ -4,10 +4,11 @@ import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
-import ReactDOMServer from "react-dom/server";
+import { createRoot } from "react-dom/client";
 import { fetchOrganizations } from "../api/organization";
 import type { Organization } from "../types/types";
 import OrganizationPopup from "./organization-popup";
+import SidebarInfoPopup from "./sidebar-info-popup";
 
 interface FullscreenMapProps {
   filters: { name: string; province: string; sport: string };
@@ -18,6 +19,9 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [selectedOrganization, setSelectedOrganization] =
+    useState<Organization | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +69,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
           const childCount = cluster.getChildCount();
           const size = childCount < 10 ? 30 : childCount < 100 ? 40 : 50;
           return L.divIcon({
-            html: `<div style="width: ${size}px; height: ${size}px;"><span>${childCount}</span></div>`,
+            html: `<div class="flex items-center justify-center bg-red-500 bg-opacity-50 text-white rounded-full font-bold" style="width: ${size}px; height: ${size}px;"><span>${childCount}</span></div>`,
             className: "custom-cluster-icon",
             iconSize: L.point(size, size),
           });
@@ -106,7 +110,9 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
         if (org.address?.coordinates) {
           const customIcon = L.divIcon({
             html: `
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="rgba(255, 0, 0, 0.6)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dot"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>
+              <div class="flex items-center justify-center bg-white border-2 border-red-500 rounded-full" style="width: 24px; height: 24px;">
+                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+              </div>
             `,
             className: "custom-div-icon",
             iconSize: [24, 24],
@@ -118,22 +124,22 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             icon: customIcon,
           });
 
-          const popupContent = ReactDOMServer.renderToString(
+          const popupContainer = L.DomUtil.create("div");
+          const root = createRoot(popupContainer);
+
+          root.render(
             <OrganizationPopup
               name={org.name || ""}
-              sport={org.sport || []}
-              address={org.address}
               logo_url={org.logo_url}
+              onMoreInfo={() => {
+                console.log("onMoreInfo called");
+                setSelectedOrganization(org);
+                setIsSidebarOpen(true);
+              }}
             />
           );
 
-          marker.bindPopup(popupContent, {
-            maxWidth: 300,
-            minWidth: 200,
-            autoPan: true,
-            autoPanPadding: [50, 50],
-            keepInView: true,
-          });
+          marker.bindPopup(popupContainer);
 
           marker.on("popupopen", () => {
             if (mapRef.current) {
@@ -145,12 +151,25 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             }
           });
 
+          marker.on("popupclose", () => {
+            root.unmount();
+          });
+
           markerClusterGroupRef.current?.addLayer(marker);
         }
       });
   }, [organizations, filters]);
 
-  return <div ref={mapContainerRef} className="h-full w-full z-40" />;
+  return (
+    <>
+      <div ref={mapContainerRef} className="h-full w-full z-40" />
+      <SidebarInfoPopup
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        organization={selectedOrganization}
+      />
+    </>
+  );
 };
 
 export default FullscreenMap;

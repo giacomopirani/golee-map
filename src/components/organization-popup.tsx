@@ -1,53 +1,41 @@
-import { Button } from "@/components/ui/button";
 import type React from "react";
+import { Button } from "./ui/button";
 
 interface OrganizationPopupProps {
-  name: string;
-  sport: string[];
-  address: {
-    address?: string;
-    town?: string;
-  };
   logo_url?: string;
+  name: string;
+  onMoreInfo: () => void;
 }
 
 const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
-  name,
-  sport,
-  address,
   logo_url,
+  name,
+  onMoreInfo,
 }) => {
   return (
-    <div className="max-w-sm p-4 bg-white rounded-lg shadow-md">
-      <h3 className="text-base  mb-2">
-        <strong className="font-semibold mr-2">Società:</strong>
-        {name || "Nome non disponibile"}
-      </h3>
-      {sport?.length > 0 && (
-        <p className="mb-2">
-          <strong>Sport:</strong> {sport.join(", ")}
-        </p>
-      )}
-      {(address?.address || address?.town) && (
-        <p className="mb-2">
-          <strong>Indirizzo:</strong>{" "}
-          {[address.address, address.town].filter(Boolean).join(", ")}
-        </p>
-      )}
+    <div className="max-w-sm p-4 bg-white  flex flex-col items-center">
       {logo_url ? (
         <img
           src={logo_url || "/placeholder.svg"}
-          alt={`Logo ${name || ""}`}
-          className="mt-2 mx-auto max-w-full h-auto"
+          alt={`Logo ${name}`}
+          className="mb-4 max-w-full h-auto"
           style={{ maxHeight: "100px" }}
         />
       ) : (
-        <p className="mt-2 text-center text-gray-500 italic">
-          Nessun logo disponibile
-        </p>
+        <div className="mb-4 w-20 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+          <span className="text-gray-500 text-2xl">{name.charAt(0)}</span>
+        </div>
       )}
-
-      <Button>TEST</Button>
+      <h3 className="text-lg font-semibold">Società:</h3>
+      <h3 className="text-base mb-4 text-center">
+        {name || "Nome non disponibile"}
+      </h3>
+      <Button
+        onClick={onMoreInfo}
+        className="bg-red-600 hover:bg-red-700 text-white p-2 "
+      >
+        More info
+      </Button>
     </div>
   );
 };
