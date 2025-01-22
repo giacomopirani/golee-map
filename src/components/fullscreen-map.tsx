@@ -3,8 +3,9 @@ import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createRoot, type Root } from "react-dom/client";
 import { fetchOrganizations } from "../api/organization";
 import type { Organization } from "../types/types";
 import OrganizationPopup from "./organization-popup";
@@ -22,6 +23,36 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const popupPoolRef = useRef<
+    Map<string, { root: Root; container: HTMLDivElement }>
+  >(new Map());
+
+  const createPopupContent = useCallback((org: Organization) => {
+    const popupId = `popup-${org.id}`;
+    let popupData = popupPoolRef.current.get(popupId);
+
+    if (!popupData) {
+      const container = document.createElement("div");
+      const root = createRoot(container);
+      popupData = { root, container };
+      popupPoolRef.current.set(popupId, popupData);
+    }
+
+    const { root, container } = popupData;
+
+    root.render(
+      <OrganizationPopup
+        name={org.name || ""}
+        logo_url={org.logo_url}
+        onMoreInfo={() => {
+          setSelectedOrganization(org);
+          setIsSidebarOpen(true);
+        }}
+      />
+    );
+
+    return container;
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +115,9 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
         mapRef.current.remove();
         mapRef.current = null;
       }
+      // Pulizia dei root React
+      popupPoolRef.current.forEach(({ root }) => root.unmount());
+      popupPoolRef.current.clear();
     };
   }, []);
 
@@ -124,22 +158,8 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             icon: customIcon,
           });
 
-          const popupContainer = L.DomUtil.create("div");
-          const root = createRoot(popupContainer);
-
-          root.render(
-            <OrganizationPopup
-              name={org.name || ""}
-              logo_url={org.logo_url}
-              onMoreInfo={() => {
-                console.log("onMoreInfo called");
-                setSelectedOrganization(org);
-                setIsSidebarOpen(true);
-              }}
-            />
-          );
-
-          marker.bindPopup(popupContainer);
+          const popupContent = createPopupContent(org);
+          marker.bindPopup(popupContent);
 
           marker.on("popupopen", () => {
             if (mapRef.current) {
@@ -151,14 +171,10 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ filters }) => {
             }
           });
 
-          marker.on("popupclose", () => {
-            root.unmount();
-          });
-
           markerClusterGroupRef.current?.addLayer(marker);
         }
       });
-  }, [organizations, filters]);
+  }, [organizations, filters, createPopupContent]);
 
   return (
     <>
