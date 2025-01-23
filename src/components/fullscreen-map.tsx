@@ -29,7 +29,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
     mapRef.current = L.map(mapContainerRef.current, {
       zoomControl: false,
       minZoom: 5,
-    }).setView([42.5, 10.5], 6);
+    }).setView([42.5, 12.5], 6);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       minZoom: 4,
