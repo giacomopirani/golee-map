@@ -17,25 +17,29 @@ function App() {
   >([]);
 
   const handleFilterChange = (newFilters: Filters) => {
+    console.log(newFilters);
+
     setFilters(newFilters);
+
     const filteredOrganizations = organizations.filter((org) => {
       const nameMatch = org.name
         .toLowerCase()
-        .includes(filters.name.toLowerCase());
+        .includes(newFilters.name.toLowerCase());
 
       const sportMatch = org.sport.some((sport) =>
-        sport.toLowerCase().includes(filters.sport.toLowerCase())
+        sport.toLowerCase().includes(newFilters.sport.toLowerCase())
       );
 
       const provinceMatch =
         org && org.address && org.address.zone
           ? org.address.zone
               .toLowerCase()
-              .includes(String(filters.province).toLowerCase())
+              .includes(String(newFilters.province).toLowerCase())
           : false;
 
-      return nameMatch && provinceMatch && sportMatch;
+      return provinceMatch && nameMatch && sportMatch;
     });
+
     setFilteredOrganizations(filteredOrganizations);
   };
 
@@ -56,9 +60,6 @@ function App() {
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log(organizations);
-  console.log(filters);
 
   return (
     <div className="h-screen overflow-hidden">

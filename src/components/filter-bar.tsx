@@ -1,6 +1,16 @@
+import { PROVINCES } from "@/utils/util";
 import type React from "react";
 import type { Filters } from "../types/types";
 import { Input } from "./ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface FilterBarProps {
   onFilterChange: (filters: Filters) => void;
@@ -11,6 +21,10 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onFilterChange({ ...filters, [name]: value });
+  };
+
+  const onProvinceChange = (province: string) => {
+    onFilterChange({ ...filters, province });
   };
 
   return (
@@ -24,14 +38,27 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
           onChange={handleInputChange}
           className="flex-1"
         />
-        <Input
-          type="text"
-          name="province"
-          placeholder="Filtra per provincia"
-          value={filters.province}
-          onChange={handleInputChange}
-          className="flex-1"
-        />
+
+        <Select
+          onValueChange={onProvinceChange}
+          defaultValue={filters.province}
+        >
+          <SelectTrigger className="max-w-[350px]">
+            <SelectValue placeholder="Filtra per provincia" />
+          </SelectTrigger>
+          <SelectContent>
+            <ScrollArea className="h-[300px]">
+              {Object.entries(PROVINCES)
+                .sort(([, a], [, b]) => a.label.localeCompare(b.label))
+                .map(([code, { label }]) => (
+                  <SelectItem key={code} value={code}>
+                    {label} ({code})
+                  </SelectItem>
+                ))}
+            </ScrollArea>
+          </SelectContent>
+        </Select>
+
         <Input
           type="text"
           name="sport"
