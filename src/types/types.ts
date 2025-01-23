@@ -16,3 +16,9 @@ export interface Organization {
   registrationYear: number;
   address: Address;
 }
+
+export interface Filters {
+  name: string;
+  province: string;
+  sport: string;
+}

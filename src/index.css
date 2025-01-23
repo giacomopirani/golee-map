@@ -98,3 +98,8 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+.my-marker {
+  @apply shadow-md;
+  @apply border border-red-100;
+}

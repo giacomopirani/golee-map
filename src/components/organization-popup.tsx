@@ -2,15 +2,15 @@ import type React from "react";
 import { Button } from "./ui/button";
 
 interface OrganizationPopupProps {
+  organizationId: string;
   logo_url?: string;
   name: string;
-  onMoreInfo: () => void;
 }
 
 const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
+  organizationId,
   logo_url,
   name,
-  onMoreInfo,
 }) => {
   return (
     <div className="max-w-sm p-4 bg-white  flex flex-col items-center">
@@ -31,10 +31,10 @@ const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
         {name || "Nome non disponibile"}
       </h3>
       <Button
-        onClick={onMoreInfo}
-        className="bg-red-600 hover:bg-red-700 text-white p-2 "
+        className="bg-red-600 hover:bg-red-400 text-white p-2 px-4 more-info-button"
+        data-organization-id={organizationId}
       >
-        More info
+        Info
       </Button>
     </div>
   );

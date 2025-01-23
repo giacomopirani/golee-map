@@ -1,24 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { fetchOrganizations } from "./api/organization";
 import FilterBar from "./components/filter-bar";
 import FullscreenMap from "./components/fullscreen-map";
+import { Filters, Organization } from "./types/types";
 
 function App() {
-  const [filters, setFilters] = useState({ name: "", province: "", sport: "" });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [filters, setFilters] = useState<Filters>({
+    name: "",
+    province: "",
+    sport: "",
+  });
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [filteredOrganizations, setFilteredOrganizations] = useState<
+    Organization[]
+  >([]);
 
-  const handleFilterChange = (newFilters: {
-    name: string;
-    province: string;
-    sport: string;
-  }) => {
+  const handleFilterChange = (newFilters: Filters) => {
     setFilters(newFilters);
+    const filteredOrganizations = organizations.filter((org) => {
+      const nameMatch = org.name
+        .toLowerCase()
+        .includes(filters.name.toLowerCase());
+
+      const sportMatch = org.sport.some((sport) =>
+        sport.toLowerCase().includes(filters.sport.toLowerCase())
+      );
+
+      const provinceMatch =
+        org && org.address && org.address.zone
+          ? org.address.zone
+              .toLowerCase()
+              .includes(String(filters.province).toLowerCase())
+          : false;
+
+      return nameMatch && provinceMatch && sportMatch;
+    });
+    setFilteredOrganizations(filteredOrganizations);
   };
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    try {
+      const data = await fetchOrganizations();
+      setOrganizations(data);
+      setFilteredOrganizations(data);
+    } catch (err) {
+      console.error("Error fetching organizations:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(organizations);
+  console.log(filters);
 
   return (
     <div className="h-screen overflow-hidden">
       <div className="absolute inset-x-0 top-4 z-50 mx-6">
-        <FilterBar onFilterChange={handleFilterChange} />
+        <FilterBar onFilterChange={handleFilterChange} filters={filters} />
       </div>
-      <FullscreenMap filters={filters} />
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+        </div>
+      ) : (
+        <FullscreenMap organizations={filteredOrganizations} />
+      )}
     </div>
   );
 }
