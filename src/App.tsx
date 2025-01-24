@@ -63,13 +63,13 @@ function App() {
 
   return (
     <div className="h-screen overflow-hidden">
-      <div className="absolute inset-x-0 top-4 z-50 mx-6">
+      <div className="absolute inset-x-2 top-4 z-50 mx-6 flex p-4">
         <FilterBar onFilterChange={handleFilterChange} filters={filters} />
       </div>
 
       {isLoading ? (
         <div className="flex items-center justify-center h-full">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-8 border-gray-500"></div>
         </div>
       ) : (
         <FullscreenMap organizations={filteredOrganizations} />
