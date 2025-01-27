@@ -22,5 +22,3 @@ export interface Filters {
   province: string;
   sport: string;
 }
-
-export type Theme = "light" | "dark";

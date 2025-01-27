@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import { fetchOrganizations } from "./api/organization";
 import FilterBar from "./components/filter-bar";
 import FullscreenMap from "./components/fullscreen-map";
-import { Filters, Organization, Theme } from "./types/types";
+import { Theme, useTheme } from "./components/theme-provider";
+import { Filters, Organization } from "./types/types";
 import { mapStyleConfig } from "./utils/map-style-config";
 
 function App() {
   const mapRef = useRef<L.Map | null>(null);
 
-  const [theme, setTheme] = useState<Theme>("light");
+  const { setTheme, theme } = useTheme();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
@@ -53,6 +54,8 @@ function App() {
     if (!mapRef.current) {
       return;
     }
+    console.log(_theme);
+    setTheme(_theme);
 
     L.tileLayer(mapStyleConfig[_theme].tileLayer, {
       minZoom: 4,
@@ -60,8 +63,6 @@ function App() {
       attribution: mapStyleConfig[_theme].attribution,
       ext: mapStyleConfig[_theme].ext,
     } as L.TileLayerOptions).addTo(mapRef.current);
-
-    setTheme(_theme);
   };
 
   const fetchData = async () => {

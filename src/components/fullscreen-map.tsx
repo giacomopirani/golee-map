@@ -6,11 +6,12 @@ import "leaflet/dist/leaflet.css";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
-import type { Organization, Theme } from "../types/types";
+import type { Organization } from "../types/types";
 
 import { mapStyleConfig } from "@/utils/map-style-config";
 import OrganizationPopup from "./organization-popup";
 import SidebarInfoPopup from "./sidebar-info-popup";
+import { Theme } from "./theme-provider";
 
 interface FullscreenMapProps {
   organizations: Organization[];

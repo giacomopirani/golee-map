@@ -1,4 +1,4 @@
-import { Theme } from "@/types/types";
+import { Theme } from "@/components/theme-provider";
 
 type MapStyleConfig = {
   tileLayer: string;

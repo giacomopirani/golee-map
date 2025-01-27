@@ -1,6 +1,6 @@
 import { PROVINCES } from "@/utils/provinces";
 import type React from "react";
-import type { Filters, Theme } from "../types/types";
+import type { Filters } from "../types/types";
 import { Input } from "./ui/input";
 
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SPORTS } from "@/utils/sports";
-import { Search } from "lucide-react";
+import { MoonIcon, Search, SunIcon } from "lucide-react";
+import { Theme } from "./theme-provider";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 
@@ -106,10 +107,21 @@ const FilterBar: React.FC<FilterBarProps> = ({
   };
   return (
     <nav
-      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer transition duration-200 hover:scale-105 rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
+      className={`relative bg-background border-2 cursor-pointer transition-transform duration-200 rounded-lg shadow-lg p-4 mx-auto  ${
+        !isDragging && "animate-pulse-light"
+      }
+          ${
+            isDragging
+              ? "shadow-xl scale-105"
+              : "hover:shadow-xl hover:border-red-400 hover:-translate-y-1"
+          }
+      }`}
       ref={filterBarRef}
       onMouseDown={handleMouseDown}
-      style={{ left: position.x, top: position.y }}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        transition: "transform 0.1s ease",
+      }}
     >
       <div className="flex flex-col space-y-4 md:flex-row md:gap-5 md:items-center md:space-y-0 ">
         <div className="relative">
@@ -161,7 +173,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             ×
           </Button>
           <Button
-            className="rounded-s-md"
+            className="rounded-md"
             onClick={() => {
               if (isButtonDisabled) return;
               props.onChangeTheme(props.theme === "dark" ? "light" : "dark");
@@ -172,7 +184,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             }}
             disabled={isButtonDisabled}
           >
-            {props.theme === "dark" ? "Light" : "Dark"}
+            {props.theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </Button>
         </div>
       </div>
