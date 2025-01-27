@@ -124,7 +124,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           />
         </div>
         <Select onValueChange={onProvinceChange} value={filters.province}>
-          <SelectTrigger className=" text-slate-500">
+          <SelectTrigger className=" text-slate-500 w-[230px]">
             <SelectValue placeholder="Filtra per provincia" />
           </SelectTrigger>
           <SelectContent>
@@ -140,7 +140,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </SelectContent>
         </Select>
         <Select onValueChange={onSportChange} value={filters.sport}>
-          <SelectTrigger className="text-slate-500">
+          <SelectTrigger className="text-slate-500 w-[230px]">
             <SelectValue placeholder="Filtra per sport" />
           </SelectTrigger>
           <SelectContent>
@@ -153,23 +153,28 @@ const FilterBar: React.FC<FilterBarProps> = ({
             </ScrollArea>
           </SelectContent>
         </Select>
-        <Button onClick={handleResetFilters} className=" w-[36px] rounded-full">
-          ×
-        </Button>
-        <Button
-          className="rounded-s-md"
-          onClick={() => {
-            if (isButtonDisabled) return;
-            props.onChangeTheme(props.theme === "dark" ? "light" : "dark");
-            setIsButtonDisabled(true);
-            setTimeout(() => {
-              setIsButtonDisabled(false);
-            }, 3000);
-          }}
-          disabled={isButtonDisabled}
-        >
-          {props.theme === "dark" ? "Light" : "Dark"}
-        </Button>
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            onClick={handleResetFilters}
+            className="w-[36px] rounded-full"
+          >
+            ×
+          </Button>
+          <Button
+            className="rounded-s-md"
+            onClick={() => {
+              if (isButtonDisabled) return;
+              props.onChangeTheme(props.theme === "dark" ? "light" : "dark");
+              setIsButtonDisabled(true);
+              setTimeout(() => {
+                setIsButtonDisabled(false);
+              }, 3000);
+            }}
+            disabled={isButtonDisabled}
+          >
+            {props.theme === "dark" ? "Light" : "Dark"}
+          </Button>
+        </div>
       </div>
     </nav>
   );
