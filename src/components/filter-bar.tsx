@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { SPORTS } from "@/utils/sports";
 import { Search } from "lucide-react";
+import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 
 interface FilterBarProps {
@@ -27,17 +28,25 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
   const dragRef = useRef<{ x: number; y: number } | null>(null);
   const filterBarRef = useRef<HTMLDivElement | null>(null);
 
+  const initialFilters: Filters = {
+    name: "",
+    province: "",
+    sport: "",
+  };
+
   const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
     if (
       filterBarRef.current &&
-      filterBarRef.current.contains(e.target as Node)
+      filterBarRef.current.contains(target) &&
+      target.tagName !== "INPUT"
     ) {
       setIsDragging(true);
       dragRef.current = {
         x: e.clientX - position.x,
         y: e.clientY - position.y,
       };
-      e.preventDefault(); // Previene il comportamento predefinito
+      e.preventDefault();
     }
   };
 
@@ -70,21 +79,27 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
   };
 
   const onProvinceChange = (province: string) => {
-    onFilterChange({ ...filters, province });
+    if (province !== "default") {
+      onFilterChange({ ...filters, province });
+    }
   };
 
   const onSportChange = (sport: string) => {
-    onFilterChange({ ...filters, sport });
+    if (sport !== "default") {
+      onFilterChange({ ...filters, sport });
+    }
   };
 
+  const handleResetFilters = () => {
+    onFilterChange(initialFilters);
+  };
   return (
     <nav
-      className="relative bg-white border-[#749F9A] border-2 cursor-move rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
+      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
       ref={filterBarRef}
       onMouseDown={handleMouseDown}
       style={{ left: position.x, top: position.y }}
     >
-      {" "}
       <div className="flex flex-col space-y-4 md:flex-row md:gap-5 md:items-center md:space-y-0 ">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
@@ -97,10 +112,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
             className="flex-1 pl-10 w-125 text-slate-500 max-w-[350px]"
           />
         </div>
-        <Select
-          onValueChange={onProvinceChange}
-          defaultValue={filters.province}
-        >
+        <Select onValueChange={onProvinceChange} value={filters.province}>
           <SelectTrigger className="max-w-[300px] text-slate-500">
             <SelectValue placeholder="Filtra per provincia" />
           </SelectTrigger>
@@ -116,7 +128,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
             </ScrollArea>
           </SelectContent>
         </Select>
-        <Select onValueChange={onSportChange} defaultValue={filters.sport}>
+        <Select onValueChange={onSportChange} value={filters.sport}>
           <SelectTrigger className="max-w-[300px] text-slate-500">
             <SelectValue placeholder="Filtra per sport" />
           </SelectTrigger>
@@ -130,6 +142,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
             </ScrollArea>
           </SelectContent>
         </Select>
+        <Button
+          onClick={handleResetFilters}
+          className="bg-white text-gray-700 w-[36px] rounded-full hover:bg-slate-100 transition-colors"
+        >
+          ×
+        </Button>
       </div>
     </nav>
   );
