@@ -52,9 +52,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging && dragRef.current) {
-      setPosition({
-        x: e.clientX - dragRef.current.x,
-        y: e.clientY - dragRef.current.y,
+      requestAnimationFrame(() => {
+        const newX = e.clientX - (dragRef.current?.x || 0);
+        const newY = e.clientY - (dragRef.current?.y || 0);
+
+        if (newX !== position.x || newY !== position.y) {
+          setPosition({ x: newX, y: newY });
+        }
       });
     }
   };
@@ -95,7 +99,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
   };
   return (
     <nav
-      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
+      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer transition-transform duration-200 hover:scale-105 rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
       ref={filterBarRef}
       onMouseDown={handleMouseDown}
       style={{ left: position.x, top: position.y }}
@@ -144,7 +148,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
         </Select>
         <Button
           onClick={handleResetFilters}
-          className="bg-white text-gray-700 w-[36px] rounded-full hover:bg-slate-100 transition-colors"
+          className="bg-white text-gray-700 w-[36px] rounded-full hover:bg-slate-200 transition-colors"
         >
           ×
         </Button>

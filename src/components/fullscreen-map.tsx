@@ -15,6 +15,14 @@ interface FullscreenMapProps {
   organizations: Organization[];
 }
 
+const mapStyleConfig = {
+  tileLayer:
+    "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}",
+  attribution:
+    '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  ext: "png",
+};
+
 const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -31,12 +39,11 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
       minZoom: 5,
     }).setView([42.5, 12.5], 6);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer(mapStyleConfig.tileLayer, {
       minZoom: 4,
       maxZoom: 18,
-      attribution:
-        '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      ext: "png",
+      attribution: mapStyleConfig.attribution,
+      ext: mapStyleConfig.ext,
     } as L.TileLayerOptions).addTo(mapRef.current);
 
     L.control
@@ -57,7 +64,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
         const childCount = cluster.getChildCount();
         const size = childCount < 10 ? 30 : childCount < 100 ? 40 : 50;
         return L.divIcon({
-          html: `<div class="flex items-center justify-center bg-rose-400 bg-opacity-15 text-white rounded-full font-bold" style="width: ${size}px; height: ${size}px;"><span>${childCount}</span></div>`,
+          html: `<div class="flex items-center justify-center bg-red-600 bg-opacity-15 text-white rounded-full font-bold" style="width: ${size}px; height: ${size}px;"><span>${childCount}</span></div>`,
           className: "custom-cluster-icon",
           iconSize: L.point(size, size),
         });
@@ -79,7 +86,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
               <g id="SVGRepo_bgCarrier" stroke-width="0" class="my-marker"></g>
               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
               <g id="SVGRepo_iconCarrier">
-                <circle cx="8" cy="8" r="7" fill="#ff9393" stroke="#749F9A" stroke-width="2"></circle>
+                <circle cx="8" cy="8" r="7" fill="#dd2d4a" stroke="#749F9A" stroke-width="2"></circle>
               </g>
             </svg>
           `,
