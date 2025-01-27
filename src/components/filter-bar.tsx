@@ -120,11 +120,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
             placeholder="Cerca per nome"
             value={filters.name}
             onChange={handleInputChange}
-            className="flex-1 pl-10 w-125 text-slate-500 max-w-[350px]"
+            className="flex-1 pl-10 w-125 text-slate-500"
           />
         </div>
         <Select onValueChange={onProvinceChange} value={filters.province}>
-          <SelectTrigger className="max-w-[300px] text-slate-500">
+          <SelectTrigger className=" text-slate-500">
             <SelectValue placeholder="Filtra per provincia" />
           </SelectTrigger>
           <SelectContent>
@@ -140,7 +140,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           </SelectContent>
         </Select>
         <Select onValueChange={onSportChange} value={filters.sport}>
-          <SelectTrigger className="max-w-[300px] text-slate-500">
+          <SelectTrigger className="text-slate-500">
             <SelectValue placeholder="Filtra per sport" />
           </SelectTrigger>
           <SelectContent>
@@ -153,14 +153,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
             </ScrollArea>
           </SelectContent>
         </Select>
-        <Button
-          onClick={handleResetFilters}
-          className="bg-black text-white w-[36px] rounded-full hover:bg-slate-400 transition-colors"
-        >
+        <Button onClick={handleResetFilters} className=" w-[36px] rounded-full">
           ×
         </Button>
         <Button
-          className="rounded-full"
+          className="rounded-s-md"
           onClick={() => {
             if (isButtonDisabled) return;
             props.onChangeTheme(props.theme === "dark" ? "light" : "dark");
@@ -171,7 +168,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           }}
           disabled={isButtonDisabled}
         >
-          {props.theme === "dark" ? "passa a light" : " passa a dark"}
+          {props.theme === "dark" ? "Light" : "Dark"}
         </Button>
       </div>
     </nav>
