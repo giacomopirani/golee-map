@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react";
+import L from "leaflet";
+import { useEffect, useRef, useState } from "react";
 import { fetchOrganizations } from "./api/organization";
 import FilterBar from "./components/filter-bar";
 import FullscreenMap from "./components/fullscreen-map";
-import { Filters, Organization } from "./types/types";
+import { Filters, Organization, Theme } from "./types/types";
+import { mapStyleConfig } from "./utils/map-style-config";
 
 function App() {
+  const mapRef = useRef<L.Map | null>(null);
+
+  const [theme, setTheme] = useState<Theme>("light");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     name: "",
@@ -43,6 +49,21 @@ function App() {
     setFilteredOrganizations(filteredOrganizations);
   };
 
+  const changeTheme = (_theme: Theme) => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    L.tileLayer(mapStyleConfig[_theme].tileLayer, {
+      minZoom: 4,
+      maxZoom: 18,
+      attribution: mapStyleConfig[_theme].attribution,
+      ext: mapStyleConfig[_theme].ext,
+    } as L.TileLayerOptions).addTo(mapRef.current);
+
+    setTheme(_theme);
+  };
+
   const fetchData = async () => {
     setIsLoading(true);
 
@@ -64,7 +85,12 @@ function App() {
   return (
     <div className="h-screen overflow-hidden">
       <div className="absolute inset-x-2 top-4 z-50 mx-6 flex p-4">
-        <FilterBar onFilterChange={handleFilterChange} filters={filters} />
+        <FilterBar
+          onFilterChange={handleFilterChange}
+          filters={filters}
+          theme={theme}
+          onChangeTheme={changeTheme}
+        />
       </div>
 
       {isLoading ? (
@@ -72,7 +98,11 @@ function App() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-8 border-gray-500"></div>
         </div>
       ) : (
-        <FullscreenMap organizations={filteredOrganizations} />
+        <FullscreenMap
+          organizations={filteredOrganizations}
+          mapRef={mapRef}
+          theme={theme}
+        />
       )}
     </div>
   );

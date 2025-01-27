@@ -6,51 +6,63 @@ import "leaflet/dist/leaflet.css";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactDOMServer from "react-dom/server";
-import type { Organization } from "../types/types";
+import type { Organization, Theme } from "../types/types";
 
+import { mapStyleConfig } from "@/utils/map-style-config";
 import OrganizationPopup from "./organization-popup";
 import SidebarInfoPopup from "./sidebar-info-popup";
 
 interface FullscreenMapProps {
   organizations: Organization[];
+  mapRef: React.MutableRefObject<L.Map | null>;
+  theme: Theme;
 }
 
-const mapStyleConfig = {
-  tileLayer:
-    "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}",
-  attribution:
-    '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  ext: "png",
-};
-
-const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
-  const mapRef = useRef<L.Map | null>(null);
+const FullscreenMap: React.FC<FullscreenMapProps> = ({
+  organizations,
+  mapRef,
+  ...props
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const [selectedOrganization, setSelectedOrganization] =
     useState<Organization | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  const initTheme = () => {
+    if (!mapRef.current) {
+      return;
+    }
+
+    L.tileLayer(mapStyleConfig[props.theme].tileLayer, {
+      minZoom: 4,
+      maxZoom: 18,
+      attribution: mapStyleConfig[props.theme].attribution,
+      ext: mapStyleConfig[props.theme].ext,
+    } as L.TileLayerOptions).addTo(mapRef.current);
+  };
+
   const initMap = () => {
-    if (!mapContainerRef.current || !!mapRef.current) return;
+    if (!mapContainerRef.current) {
+      return;
+    }
+
+    if (mapRef.current) {
+      return;
+    }
 
     mapRef.current = L.map(mapContainerRef.current, {
       zoomControl: false,
       minZoom: 5,
     }).setView([42.5, 12.5], 6);
 
-    L.tileLayer(mapStyleConfig.tileLayer, {
-      minZoom: 4,
-      maxZoom: 18,
-      attribution: mapStyleConfig.attribution,
-      ext: mapStyleConfig.ext,
-    } as L.TileLayerOptions).addTo(mapRef.current);
-
     L.control
       .zoom({
         position: "bottomleft",
       })
       .addTo(mapRef.current);
+
+    initTheme();
 
     markerClusterGroupRef.current = L.markerClusterGroup({
       spiderfyOnMaxZoom: false,
@@ -162,12 +174,13 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({ organizations }) => {
 
   return (
     <>
-      <div ref={mapContainerRef} className="h-full w-full z-40" />
-      <SidebarInfoPopup
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        organization={selectedOrganization}
-      />
+      <div ref={mapContainerRef} className="h-full w-full z-40">
+        <SidebarInfoPopup
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          organization={selectedOrganization}
+        />
+      </div>
     </>
   );
 };

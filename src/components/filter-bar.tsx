@@ -1,6 +1,6 @@
 import { PROVINCES } from "@/utils/provinces";
 import type React from "react";
-import type { Filters } from "../types/types";
+import type { Filters, Theme } from "../types/types";
 import { Input } from "./ui/input";
 
 import { useEffect, useRef, useState } from "react";
@@ -20,13 +20,20 @@ import { ScrollArea } from "./ui/scroll-area";
 interface FilterBarProps {
   onFilterChange: (filters: Filters) => void;
   filters: Filters;
+  theme: Theme;
+  onChangeTheme: (theme: Theme) => void;
 }
 
-const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
+const FilterBar: React.FC<FilterBarProps> = ({
+  onFilterChange,
+  filters,
+  ...props
+}) => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{ x: number; y: number } | null>(null);
   const filterBarRef = useRef<HTMLDivElement | null>(null);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const initialFilters: Filters = {
     name: "",
@@ -99,7 +106,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
   };
   return (
     <nav
-      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer transition-transform duration-200 hover:scale-105 rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
+      className="relative bg-white border-[#d2d2d2] border-2 cursor-pointer transition duration-200 hover:scale-105 rounded-lg shadow-lg p-4 mx-auto object-fit:contain"
       ref={filterBarRef}
       onMouseDown={handleMouseDown}
       style={{ left: position.x, top: position.y }}
@@ -148,9 +155,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange, filters }) => {
         </Select>
         <Button
           onClick={handleResetFilters}
-          className="bg-white text-gray-700 w-[36px] rounded-full hover:bg-slate-200 transition-colors"
+          className="bg-black text-white w-[36px] rounded-full hover:bg-slate-400 transition-colors"
         >
           ×
+        </Button>
+        <Button
+          className="rounded-full"
+          onClick={() => {
+            if (isButtonDisabled) return;
+            props.onChangeTheme(props.theme === "dark" ? "light" : "dark");
+            setIsButtonDisabled(true);
+            setTimeout(() => {
+              setIsButtonDisabled(false);
+            }, 3000);
+          }}
+          disabled={isButtonDisabled}
+        >
+          {props.theme === "dark" ? "passa a light" : " passa a dark"}
         </Button>
       </div>
     </nav>
