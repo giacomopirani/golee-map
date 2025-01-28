@@ -9,7 +9,6 @@ import ReactDOMServer from "react-dom/server";
 import type { Organization } from "../types/types";
 
 import { mapStyleConfig } from "@/utils/map-style-config";
-import "../index.css";
 import OrganizationPopup from "./organization-popup";
 import SidebarInfoPopup from "./sidebar-info-popup";
 import { Theme } from "./theme-provider";
