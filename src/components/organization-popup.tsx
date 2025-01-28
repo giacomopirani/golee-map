@@ -1,3 +1,4 @@
+import { SPORTS } from "@/utils/sports";
 import type React from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -39,7 +40,7 @@ const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
             {sport && sport.length > 0 ? (
               sport.map((s, index) => (
                 <Badge variant="secondary" key={index} className="text-xs">
-                  {s}
+                  {SPORTS[s]}
                 </Badge>
               ))
             ) : (
