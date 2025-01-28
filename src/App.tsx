@@ -4,6 +4,7 @@ import { fetchOrganizations } from "./api/organization";
 import FilterBar from "./components/filter-bar";
 import FullscreenMap from "./components/fullscreen-map";
 import { Theme, useTheme } from "./components/theme-provider";
+import "./index.css";
 import { Filters, Organization } from "./types/types";
 import { mapStyleConfig } from "./utils/map-style-config";
 

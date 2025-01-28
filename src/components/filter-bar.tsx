@@ -173,7 +173,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             ×
           </Button>
           <Button
-            className="rounded-md"
+            className="w-[36px] rounded-full"
             onClick={() => {
               if (isButtonDisabled) return;
               props.onChangeTheme(props.theme === "dark" ? "light" : "dark");

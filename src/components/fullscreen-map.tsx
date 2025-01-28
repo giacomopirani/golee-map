@@ -9,6 +9,7 @@ import ReactDOMServer from "react-dom/server";
 import type { Organization } from "../types/types";
 
 import { mapStyleConfig } from "@/utils/map-style-config";
+import "../index.css";
 import OrganizationPopup from "./organization-popup";
 import SidebarInfoPopup from "./sidebar-info-popup";
 import { Theme } from "./theme-provider";
@@ -95,13 +96,21 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
       if (org.address?.coordinates) {
         const customIcon = L.divIcon({
           html: `
-            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g id="SVGRepo_bgCarrier" stroke-width="0" class="my-marker"></g>
-              <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                <circle cx="8" cy="8" r="7" fill="#dd2d4a" stroke="#749F9A" stroke-width="2"></circle>
-              </g>
-            </svg>
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="transition-transform duration-300">
+      <g id="SVGRepo_bgCarrier" stroke-width="0" class="my-marker"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <circle 
+          cx="8" 
+          cy="8" 
+          r="7" 
+          fill="#dd2d4a" 
+          stroke="#749F9A" 
+          stroke-width="2"
+          class="transition-all duration-300"
+        ></circle>
+      </g>
+    </svg>
           `,
           className: "custom-div-icon",
           iconSize: [24, 24],
