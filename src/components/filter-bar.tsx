@@ -113,7 +113,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           ${
             isDragging
               ? "shadow-xl scale-105"
-              : "hover:shadow-xl hover:border-red-400 hover:-translate-y-1"
+              : "hover:shadow-xl hover:-translate-y-1"
           }
       }`}
       ref={filterBarRef}
