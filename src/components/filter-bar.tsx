@@ -3,7 +3,7 @@ import type React from "react";
 import type { Filters } from "../types/types";
 import { Input } from "./ui/input";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import {
   Select,
@@ -30,9 +30,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
   filters,
   ...props
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dragRef = useRef<{ x: number; y: number } | null>(null);
   const filterBarRef = useRef<HTMLDivElement | null>(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -41,49 +38,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
     province: "",
     sport: "",
   };
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      filterBarRef.current &&
-      filterBarRef.current.contains(target) &&
-      target.tagName !== "INPUT"
-    ) {
-      setIsDragging(true);
-      dragRef.current = {
-        x: e.clientX - position.x,
-        y: e.clientY - position.y,
-      };
-      e.preventDefault();
-    }
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging && dragRef.current) {
-      requestAnimationFrame(() => {
-        const newX = e.clientX - (dragRef.current?.x || 0);
-        const newY = e.clientY - (dragRef.current?.y || 0);
-
-        if (newX !== position.x || newY !== position.y) {
-          setPosition({ x: newX, y: newY });
-        }
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -107,24 +61,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
   };
   return (
     <nav
-      className={`relative bg-background border-2 cursor-pointer transition-transform duration-200 rounded-lg shadow-lg p-4 mx-auto  ${
-        !isDragging && "animate-pulse-light"
-      }
-          ${
-            isDragging
-              ? "shadow-xl scale-105"
-              : "hover:shadow-xl hover:-translate-y-1"
-          }
-      }`}
+      className="relative bg-background border-2 rounded-lg shadow-lg p-4 mx-auto"
       ref={filterBarRef}
-      onMouseDown={handleMouseDown}
-      style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        transition: "transform 0.1s ease",
-      }}
     >
-      <div className="flex flex-col space-y-4 md:flex-row md:gap-5 md:items-center md:space-y-0 ">
-        <div className="relative">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+        <div className="relative flex-grow max-w-md">
           <Search className="absolute dark:text-slate-500 left-3 top-1/2 tex transform -translate-y-1/2  h-4 w-4" />
           <Input
             type="text"
