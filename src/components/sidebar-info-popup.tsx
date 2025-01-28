@@ -5,6 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { SPORTS } from "@/utils/sports";
 import type React from "react";
 
 interface SidebarProps {
@@ -46,7 +47,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, organization }) => {
         <div className="mt-6 space-y-4">
           <p className="text-lg">
             <span className="font-semibold">Sport:</span>{" "}
-            {organization.sport.join(", ")}
+            {organization.sport.length > 0
+              ? organization.sport
+                  .map((s) => (SPORTS[s] ? SPORTS[s] : s))
+                  .join(", ")
+              : "Nessuno sport specificato"}
           </p>
           <p className="text-lg">
             <span className="font-semibold">Indirizzo:</span>{" "}

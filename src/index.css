@@ -131,3 +131,7 @@ body,
   width: 20px;
   height: 20px;
 }
+
+.leaflet-popup-tip {
+  @apply bg-background;
+}

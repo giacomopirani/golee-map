@@ -55,7 +55,7 @@ function App() {
     if (!mapRef.current) {
       return;
     }
-    console.log(_theme);
+
     setTheme(_theme);
 
     L.tileLayer(mapStyleConfig[_theme].tileLayer, {

@@ -125,7 +125,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
     >
       <div className="flex flex-col space-y-4 md:flex-row md:gap-5 md:items-center md:space-y-0 ">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2  h-4 w-4" />
+          <Search className="absolute dark:text-slate-500 left-3 top-1/2 tex transform -translate-y-1/2  h-4 w-4" />
           <Input
             type="text"
             autoComplete="off"
@@ -133,7 +133,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             placeholder="Cerca per nome"
             value={filters.name}
             onChange={handleInputChange}
-            className="flex-1 pl-10 w-125"
+            className="flex-1 pl-10 w-125 placeholder:text-slate-500"
           />
         </div>
         <Select onValueChange={onProvinceChange} value={filters.province}>
