@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SPORTS } from "@/utils/sports";
-import { MoonIcon, Search, SunIcon } from "lucide-react";
+import { Loader2Icon, MoonIcon, Search, SunIcon } from "lucide-react";
 import { Theme } from "./theme-provider";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
@@ -125,14 +125,15 @@ const FilterBar: React.FC<FilterBarProps> = ({
     >
       <div className="flex flex-col space-y-4 md:flex-row md:gap-5 md:items-center md:space-y-0 ">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2  h-4 w-4" />
           <Input
             type="text"
+            autoComplete="off"
             name="name"
             placeholder="Cerca per nome"
             value={filters.name}
             onChange={handleInputChange}
-            className="flex-1 pl-10 w-125 text-slate-500"
+            className="flex-1 pl-10 w-125"
           />
         </div>
         <Select onValueChange={onProvinceChange} value={filters.province}>
@@ -167,12 +168,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
         </Select>
         <div className="flex items-center justify-center gap-2">
           <Button
+            variant={"outline"}
             onClick={handleResetFilters}
             className="w-[36px] rounded-full"
           >
             ×
           </Button>
           <Button
+            variant={"outline"}
             className="w-[36px] rounded-full"
             onClick={() => {
               if (isButtonDisabled) return;
@@ -180,11 +183,15 @@ const FilterBar: React.FC<FilterBarProps> = ({
               setIsButtonDisabled(true);
               setTimeout(() => {
                 setIsButtonDisabled(false);
-              }, 3000);
+              }, 2000);
             }}
             disabled={isButtonDisabled}
           >
-            {props.theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            {isButtonDisabled ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <> {props.theme === "dark" ? <SunIcon /> : <MoonIcon />}</>
+            )}
           </Button>
         </div>
       </div>

@@ -1,40 +1,60 @@
 import type React from "react";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
 interface OrganizationPopupProps {
   organizationId: string;
   logo_url?: string;
   name: string;
+  sport: string[];
 }
 
 const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
   organizationId,
   logo_url,
   name,
+  sport,
 }) => {
   return (
-    <div className="max-w-sm p-4 bg-white  flex flex-col items-center">
-      {logo_url ? (
-        <img
-          src={logo_url || "/placeholder.svg"}
-          alt={`Logo ${name}`}
-          className="mb-4 max-w-full h-auto"
-          style={{ maxHeight: "100px" }}
-        />
-      ) : (
-        <div className="mb-4 w-20 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-          <span className="text-gray-500 text-2xl">{name.charAt(0)}</span>
+    <div className="max-w-sm bg-background flex flex-col text-foreground p-6 rounded-lg">
+      <div className="w-full flex mb-2">
+        <div className="flex-shrink-0 mr-4">
+          {logo_url ? (
+            <img
+              src={logo_url || "/placeholder.svg"}
+              alt={`Logo ${name}`}
+              className="w-10 h-10 rounded-full"
+            />
+          ) : (
+            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-gray-500 text-md">{name.charAt(0)}</span>
+            </div>
+          )}
         </div>
-      )}
-      <h3 className="text-lg font-semibold">Società:</h3>
-      <h3 className="text-base mb-4 text-center">
-        {name || "Nome non disponibile"}
-      </h3>
+        <div className="flex flex-col flex-grow">
+          <h4 className="font-bold text-sm mb-1">
+            {name || "Nome non disponibile"}
+          </h4>
+          <div className="flex flex-wrap gap-1 mt-1">
+            {sport && sport.length > 0 ? (
+              sport.map((s, index) => (
+                <Badge variant="secondary" key={index} className="text-xs">
+                  {s}
+                </Badge>
+              ))
+            ) : (
+              <Badge variant="secondary" className="text-xs">
+                Sport non disponibile
+              </Badge>
+            )}
+          </div>
+        </div>
+      </div>
       <Button
-        className="bg-red-600 hover:bg-red-400 text-white p-2 px-4 more-info-button"
+        className="mt-2 w-[100px] self-center more-info-button"
         data-organization-id={organizationId}
       >
-        Info
+        Scopri di più
       </Button>
     </div>
   );

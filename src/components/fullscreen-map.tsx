@@ -126,6 +126,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
             organizationId={org.organizationId}
             name={org.name || ""}
             logo_url={org.logo_url}
+            sport={org.sport}
           />
         );
 

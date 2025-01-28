@@ -11,8 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-provinces.ts
-sports.ts
 
 # Editor directories and files
 .vscode/*
