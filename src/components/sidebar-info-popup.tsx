@@ -182,7 +182,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
             </Card>
           )}
 
-        {organization.colors && Object.keys(organization.colors).length > 0 && (
+        {organization.colors && Object.keys(organization.colors) && (
           <Card>
             <CardContent className="p-4">
               <h3 className="font-semibold text-lg mb-2">Colori</h3>
@@ -193,7 +193,6 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                       className="w-8 h-8 rounded-full border border-gray-200"
                       style={{ backgroundColor: value }}
                     ></div>
-                    <span className="text-xs mt-1">{key}</span>
                   </div>
                 ))}
               </div>
