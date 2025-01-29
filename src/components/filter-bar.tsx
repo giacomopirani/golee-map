@@ -23,6 +23,7 @@ interface FilterBarProps {
   filters: Filters;
   theme: Theme;
   onChangeTheme: (theme: Theme) => void;
+  onResetBounds: () => void;
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
@@ -63,6 +64,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
   const handleResetFilters = () => {
     onFilterChange(initialFilters);
+
+    props.onResetBounds();
   };
 
   return (

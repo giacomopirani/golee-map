@@ -17,6 +17,8 @@ interface FullscreenMapProps {
   organizations: Organization[];
   mapRef: React.MutableRefObject<L.Map | null>;
   theme: Theme;
+  onBoundsChange: (bounds: L.LatLngBounds) => void;
+  mapBounds: L.LatLngBounds | null;
 }
 
 const FullscreenMap: React.FC<FullscreenMapProps> = ({
@@ -85,14 +87,25 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
     });
 
     mapRef.current.addLayer(markerClusterGroupRef.current);
+
+    mapRef.current.on("moveend", () => {
+      if (mapRef.current) {
+        props.onBoundsChange(mapRef.current.getBounds());
+      }
+    });
   };
 
   const setupMarkers = useCallback(() => {
     if (!mapRef.current || !markerClusterGroupRef.current) return;
 
     markerClusterGroupRef.current.clearLayers();
+
+    const bounds = L.latLngBounds([]);
+
     organizations.forEach((org) => {
       if (org.address?.coordinates) {
+        const [lat, lng] = org.address.coordinates;
+
         const customIcon = L.divIcon({
           html: `
             <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="transition-transform duration-300">
@@ -117,7 +130,7 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
           popupAnchor: [0, -24],
         });
 
-        const marker = L.marker(org.address.coordinates, {
+        const marker = L.marker([lat, lng], {
           icon: customIcon,
         });
 
@@ -161,8 +174,13 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
         });
 
         markerClusterGroupRef.current?.addLayer(marker);
+        bounds.extend([lat, lng]);
       }
     });
+
+    if (bounds.isValid()) {
+      props.onBoundsChange(bounds);
+    }
   }, [organizations]);
 
   useEffect(() => {
@@ -172,6 +190,21 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
   useEffect(() => {
     setupMarkers();
   }, [setupMarkers]);
+
+  useEffect(() => {
+    if (mapRef.current && markerClusterGroupRef.current) {
+      const bounds = markerClusterGroupRef.current.getBounds();
+      if (bounds.isValid()) {
+        mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }
+  }, [organizations]);
+
+  useEffect(() => {
+    if (mapRef.current && props.mapBounds && organizations.length === 0) {
+      mapRef.current.fitBounds(props.mapBounds);
+    }
+  }, [organizations, props.mapBounds]);
 
   useEffect(() => {
     return () => {

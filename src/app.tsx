@@ -19,14 +19,14 @@ function App() {
     province: "",
     sport: "",
   });
+  const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
+
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [filteredOrganizations, setFilteredOrganizations] = useState<
     Organization[]
   >([]);
 
   const handleFilterChange = (newFilters: Filters) => {
-    console.log(newFilters);
-
     setFilters(newFilters);
 
     const filteredOrganizations = organizations.filter((org) => {
@@ -49,6 +49,25 @@ function App() {
     });
 
     setFilteredOrganizations(filteredOrganizations);
+
+    if (mapRef.current && filteredOrganizations.length > 0) {
+      const bounds = L.latLngBounds(
+        filteredOrganizations.map((org) => org.address.coordinates)
+      );
+      mapRef.current.fitBounds(bounds, { padding: [50, 50] });
+    } else if (mapRef.current && mapBounds) {
+      mapRef.current.fitBounds(mapBounds);
+    }
+  };
+
+  const updateMapBounds = (bounds: L.LatLngBounds) => {
+    setMapBounds(bounds);
+  };
+
+  const handleResetBounds = () => {
+    if (mapRef.current && mapBounds) {
+      mapRef.current.fitBounds(mapBounds);
+    }
   };
 
   const changeTheme = (_theme: Theme) => {
@@ -92,6 +111,7 @@ function App() {
           filters={filters}
           theme={theme}
           onChangeTheme={changeTheme}
+          onResetBounds={handleResetBounds}
         />
       </div>
 
@@ -104,6 +124,8 @@ function App() {
           organizations={filteredOrganizations}
           mapRef={mapRef}
           theme={theme}
+          onBoundsChange={updateMapBounds}
+          mapBounds={mapBounds}
         />
       )}
     </div>
