@@ -86,7 +86,7 @@ function App() {
 
   return (
     <div className="h-screen overflow-hidden">
-      <div className="absolute inset-x-2 top-4 z-50 mx-6 flex p-4">
+      <div className="absolute z-50 flex p-4 w-full">
         <FilterBar
           onFilterChange={handleFilterChange}
           filters={filters}
