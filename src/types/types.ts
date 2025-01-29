@@ -22,3 +22,53 @@ export interface Filters {
   province: string;
   sport: string;
 }
+
+// Details Club
+export interface ClubDetails {
+  organizationId: string;
+  name: string;
+  logoUrl: string;
+  slug: string;
+  contacts: Contact[];
+  address: Address;
+  vatNumber: string;
+  socialLinks?: SocialLinks;
+  colors?: Colors;
+  affiliate?: Affiliate;
+  sports: string[];
+  competitionLevel: "AMATEUR" | string;
+  foundationYear: string;
+  federations: Federation[];
+}
+
+export interface Contact {
+  tel: string;
+  email: string;
+  _id: string;
+}
+
+export interface SocialLinks {
+  web?: string;
+  fb?: string;
+  ig?: string;
+  tw?: string;
+  yt?: string;
+}
+
+export interface Colors {
+  1: string;
+  2: string;
+  3: string;
+}
+
+export interface Affiliate {
+  club_logo_url: string | null;
+  club_name: string;
+  club_link: string | null;
+}
+
+export interface Federation {
+  name: string;
+  number: string;
+  affiliationDate: string;
+}

@@ -28,8 +28,8 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<Organization | null>(null);
+  const [selectedOrganizationId, setSelectedOrganizationId] =
+    useState<string>();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const initTheme = () => {
@@ -147,23 +147,6 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
         marker.bindPopup(popupContent);
 
         marker.on("popupopen", () => {
-          const moreInfoButton = document.querySelector(".more-info-button");
-          if (moreInfoButton) {
-            moreInfoButton.addEventListener("click", (event) => {
-              const target = event.target as HTMLElement;
-              const organizationId = target.dataset.organizationId;
-
-              if (organizationId) {
-                setIsSidebarOpen(true);
-                setSelectedOrganization(
-                  organizations.find(
-                    (org) => org.organizationId === organizationId
-                  )!
-                );
-              }
-            });
-          }
-
           if (mapRef.current) {
             const px = mapRef.current.project(marker.getLatLng());
             px.y -= 200;
@@ -206,7 +189,26 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
     }
   }, [organizations, props.mapBounds]);
 
+  const initPopupListeners = () => {
+    document.addEventListener("click", (event) => {
+      if (event.target) {
+        const target = event.target as HTMLElement;
+
+        if (target.classList.contains("more-info-button")) {
+          const organizationId = target.dataset.organizationId;
+
+          if (organizationId) {
+            setIsSidebarOpen(true);
+            setSelectedOrganizationId(organizationId);
+          }
+        }
+      }
+    });
+  };
+
   useEffect(() => {
+    initPopupListeners();
+
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
@@ -215,13 +217,15 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
     };
   }, []);
 
+  console.log({ isSidebarOpen, selectedOrganizationId });
+
   return (
     <>
       <div ref={mapContainerRef} className="h-full w-full z-40">
         <SidebarInfoPopup
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
-          organization={selectedOrganization}
+          organizationId={selectedOrganizationId}
         />
       </div>
     </>
