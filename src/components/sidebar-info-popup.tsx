@@ -51,7 +51,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent
         side="right"
-        className="w-full sm:w-[540px] overflow-y-auto"
+        className="overflow-y-auto w-full"
+        style={{ minWidth: "30vw" }}
       >
         {isLoading ? (
           <>loading...</>
@@ -90,25 +91,21 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
   return (
     <div className="space-y-8">
       <SheetHeader>
-        <div className="flex items-center space-x-4">
-          <div className="relative w-20 h-20 rounded-full overflow-hidden">
-            <img
-              src={organization.logoUrl || "/placeholder.svg"}
-              alt={`Logo ${organization.name}`}
-              className="w-full h-full object-contains"
-            />
-          </div>
-          <div>
-            <SheetTitle className="text-2xl font-bold">
-              {organization.name}
-            </SheetTitle>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {organization.sports?.map((sport) => (
-                <Badge key={sport} variant="secondary">
-                  {sport}
-                </Badge>
-              ))}
-            </div>
+        <div
+          className="mx-auto relative w-24 h-24 rounded-full overflow-hidden bg-contain bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${organization.logoUrl})` }}
+        ></div>
+
+        <div>
+          <SheetTitle className="text-2xl font-bold text-center">
+            {organization.name}
+          </SheetTitle>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {organization.sports?.map((sport) => (
+              <Badge key={sport} variant="secondary">
+                {sport}
+              </Badge>
+            ))}
           </div>
         </div>
       </SheetHeader>
