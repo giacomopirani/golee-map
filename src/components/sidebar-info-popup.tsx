@@ -13,6 +13,14 @@ import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 
+import {
+  FaFacebook,
+  FaGlobe,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
+
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -80,12 +88,12 @@ const Sidebar: React.FC<SidebarProps> = ({
 const SidebarContent = (props: { organization: ClubDetails }) => {
   const organization = props.organization;
 
-  const socialNames: Record<string, string> = {
-    web: "Website",
-    fb: "Facebook",
-    ig: "Instagram",
-    tw: "Twitter",
-    yt: "YouTube",
+  const socialNames: Record<string, JSX.Element> = {
+    web: <FaGlobe size={25} />,
+    fb: <FaFacebook size={25} />,
+    ig: <FaInstagram size={25} />,
+    tw: <FaTwitter size={25} />,
+    yt: <FaYoutube size={25} />,
   };
 
   return (
