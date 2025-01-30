@@ -17,7 +17,7 @@ const OrganizationPopup: React.FC<OrganizationPopupProps> = ({
   sport,
 }) => {
   return (
-    <div className="max-w-sm bg-background flex flex-col text-foreground p-6 rounded-lg">
+    <div className="max-w-sm bg-background flex flex-col text-foreground p-6 rounded-lg dark:border-slate-500 border-[1px]">
       <div className="w-full flex mb-2">
         <div className="flex-shrink-0 mr-4">
           {logo_url ? (

@@ -2,7 +2,6 @@ import { fetchClubDetails } from "@/api/organization";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -142,7 +141,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
 
       <Separator />
 
-      <SheetDescription className="space-y-6">
+      <div className="space-y-6">
         {organization.address && (
           <Card>
             <CardContent className="p-4 space-y-4">
@@ -336,7 +335,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
             </CardContent>
           </Card>
         )}
-      </SheetDescription>
+      </div>
     </div>
   );
 };
