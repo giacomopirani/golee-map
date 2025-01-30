@@ -134,5 +134,5 @@ body,
 
 .leaflet-popup-tip {
   @apply bg-background;
-  @apply border-[1px] bg-slate-500;
+  @apply border-[1px] bg-slate-700;
 }
