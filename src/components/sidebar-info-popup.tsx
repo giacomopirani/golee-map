@@ -13,6 +13,11 @@ import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 
+import { translateCountryAbbreviation } from "@/utils/convert-country";
+import { translateProvinceAbbrevation } from "@/utils/convert-provinces";
+import { translateRegionAbbreviation } from "@/utils/convert-region";
+import { translateCompetitionLevel } from "@/utils/translate-level";
+
 import {
   FaFacebook,
   FaGlobe,
@@ -148,9 +153,9 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                     organization.address.address,
                     organization.address.town,
                     organization.address.postal_code,
-                    organization.address.zone,
-                    organization.address.region,
-                    organization.address.country,
+                    translateProvinceAbbrevation(organization.address.zone),
+                    translateRegionAbbreviation(organization.address.region),
+                    translateCountryAbbreviation(organization.address.country),
                   ]
                     .filter(Boolean)
                     .join(", ")}
@@ -213,8 +218,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                           rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary transition-colors"
                         >
-                          {socialNames[key] ||
-                            key.charAt(0).toUpperCase() + key.slice(1)}
+                          {socialNames[key]}
                         </a>
                       ) : null
                   )}
@@ -282,7 +286,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                   Livello di competizione
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {organization.competitionLevel}
+                  {translateCompetitionLevel(organization.competitionLevel)}
                 </p>
               </div>
             )}

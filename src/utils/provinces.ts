@@ -240,9 +240,6 @@ export const PROVINCES: {
   PN: {
     label: "Pordenone",
   },
-  PM: {
-    label: "Pordenone",
-  },
   PO: {
     label: "Prato",
   },
