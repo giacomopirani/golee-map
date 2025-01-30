@@ -8,9 +8,8 @@ import {
 } from "@/components/ui/sheet";
 import { ClubDetails } from "@/types/types";
 import { Separator } from "@radix-ui/react-select";
-import { Facebook, Globe, Instagram, Twitter } from "lucide-react";
-import type React from "react";
-import { useEffect, useState } from "react";
+import { Loader2Icon } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 
@@ -55,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         style={{ minWidth: "30vw" }}
       >
         {isLoading ? (
-          <>loading...</>
+          <Loader2Icon className="animate-spin h-[60px] w-[60px] mx-auto mt-96" />
         ) : (
           <>
             {organization ? (
@@ -81,31 +80,49 @@ const Sidebar: React.FC<SidebarProps> = ({
 const SidebarContent = (props: { organization: ClubDetails }) => {
   const organization = props.organization;
 
-  const socialIcons = {
-    facebook: <Facebook size={20} />,
-    instagram: <Instagram size={20} />,
-    twitter: <Twitter size={20} />,
-    website: <Globe size={20} />,
+  const socialNames: Record<string, string> = {
+    web: "Website",
+    fb: "Facebook",
+    ig: "Instagram",
+    tw: "Twitter",
+    yt: "YouTube",
   };
 
   return (
     <div className="space-y-8">
       <SheetHeader>
-        <div
-          className="mx-auto relative w-24 h-24 rounded-full overflow-hidden bg-contain bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${organization.logoUrl})` }}
-        ></div>
-
-        <div>
-          <SheetTitle className="text-2xl font-bold text-center">
-            {organization.name}
-          </SheetTitle>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {organization.sports?.map((sport) => (
-              <Badge key={sport} variant="secondary">
-                {sport}
-              </Badge>
-            ))}
+        <div className="flex flex-col items-center space-x-4">
+          <div className="relative w-32 h-32 rounded-full overflow-hidden">
+            {organization.logoUrl && (
+              <img
+                src={organization.logoUrl || "/placeholder.svg"}
+                alt={`Logo ${organization.name}`}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.nextElementSibling?.classList.remove(
+                    "hidden"
+                  );
+                }}
+              />
+            )}
+            <div className="inset-0 bg-primary flex items-center justify-center text-2xl font-bold text-primary-foreground">
+              {organization.name.slice(0, 2).toUpperCase()}
+            </div>
+          </div>
+          <div>
+            <SheetTitle className="text-2xl font-bold text-center mt-4">
+              {organization.name}
+            </SheetTitle>
+            {organization.sports && organization.sports.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {organization.sports.map((sport) => (
+                  <Badge key={sport} variant="secondary">
+                    {sport}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </SheetHeader>
@@ -113,49 +130,64 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
       <Separator />
 
       <SheetDescription className="space-y-6">
-        <Card>
-          <CardContent className="p-4 space-y-4">
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Indirizzo</h3>
-              <p className="text-sm text-muted-foreground">
-                {[
-                  organization.address.address,
-                  organization.address.town,
-                  organization.address.postal_code,
-                  organization.address.zone,
-                  organization.address.region,
-                  organization.address.country,
-                ]
-                  .filter(Boolean)
-                  .join(", ")}
-              </p>
-            </div>
-
-            {organization.contacts && organization.contacts.length > 0 && (
+        {organization.address && (
+          <Card>
+            <CardContent className="p-4 space-y-4">
               <div>
-                <h3 className="font-semibold text-lg mb-2">Contatti</h3>
-                {organization.contacts.map((contact) => (
-                  <div
-                    key={contact._id}
-                    className="text-sm text-muted-foreground"
-                  >
-                    <p>Tel: {contact.tel}</p>
-                    <p>Email: {contact.email}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {organization.vatNumber && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2">Partita IVA</h3>
+                <h3 className="font-semibold text-lg mb-2">Indirizzo</h3>
                 <p className="text-sm text-muted-foreground">
-                  {organization.vatNumber}
+                  {[
+                    organization.address.address,
+                    organization.address.town,
+                    organization.address.postal_code,
+                    organization.address.zone,
+                    organization.address.region,
+                    organization.address.country,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
                 </p>
               </div>
-            )}
-          </CardContent>
-        </Card>
+
+              {organization.contacts && organization.contacts.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Contatti</h3>
+                  {organization.contacts.map((contact) => (
+                    <div key={contact._id} className="text-sm">
+                      {contact.tel && (
+                        <p>
+                          <span className="font-bold bg-background">Tel:</span>{" "}
+                          <span className="text-muted-foreground">
+                            {contact.tel}
+                          </span>
+                        </p>
+                      )}
+                      {contact.email && (
+                        <p>
+                          <span className="font-bold bg-background">
+                            Email:
+                          </span>{" "}
+                          <span className="text-muted-foreground">
+                            {contact.email}
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {organization.vatNumber && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Partita IVA</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {organization.vatNumber}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {organization.socialLinks &&
           Object.values(organization.socialLinks).some(Boolean) && (
@@ -173,7 +205,8 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                           rel="noopener noreferrer"
                           className="text-muted-foreground hover:text-primary transition-colors"
                         >
-                          {socialIcons[key as keyof typeof socialIcons]}
+                          {socialNames[key] ||
+                            key.charAt(0).toUpperCase() + key.slice(1)}
                         </a>
                       ) : null
                   )}
@@ -182,7 +215,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
             </Card>
           )}
 
-        {organization.colors && Object.keys(organization.colors) && (
+        {organization.colors && Object.keys(organization.colors).length > 0 && (
           <Card>
             <CardContent className="p-4">
               <h3 className="font-semibold text-lg mb-2">Colori</h3>
@@ -204,8 +237,11 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
           <Card>
             <CardContent className="p-4 space-y-2">
               <h3 className="font-semibold text-lg">Affiliazione</h3>
-              <p className="text-sm text-muted-foreground">
-                Nome del club: {organization.affiliate.club_name}
+              <p className="text-sm">
+                <span className="font-bold bg-background">Nome del club:</span>{" "}
+                <span className="text-muted-foreground">
+                  {organization.affiliate.club_name}
+                </span>
               </p>
               {organization.affiliate.club_logo_url && (
                 <img
@@ -232,20 +268,26 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
 
         <Card>
           <CardContent className="p-4 space-y-4">
-            <div>
-              <h3 className="font-semibold text-lg mb-1">
-                Livello di competizione
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {organization.competitionLevel}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg mb-1">Anno di fondazione</h3>
-              <p className="text-sm text-muted-foreground">
-                {organization.foundationYear}
-              </p>
-            </div>
+            {organization.competitionLevel && (
+              <div>
+                <h3 className="font-semibold text-lg mb-1">
+                  Livello di competizione
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {organization.competitionLevel}
+                </p>
+              </div>
+            )}
+            {organization.foundationYear && (
+              <div>
+                <h3 className="font-semibold text-lg mb-1">
+                  Anno di fondazione
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {organization.foundationYear}
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -255,18 +297,26 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
               <h3 className="font-semibold text-lg mb-2">Federazioni</h3>
               <div className="space-y-4">
                 {organization.federations.map((federation, index) => (
-                  <div key={index} className="text-sm text-muted-foreground">
+                  <div key={index} className="text-sm">
                     <p>
-                      <span className="font-medium">Nome:</span>{" "}
-                      {federation.name}
+                      <span className="font-bold bg-background">Nome:</span>{" "}
+                      <span className="text-muted-foreground">
+                        {federation.name}
+                      </span>
                     </p>
                     <p>
-                      <span className="font-medium">Numero:</span>{" "}
-                      {federation.number}
+                      <span className="font-bold bg-background">Numero:</span>{" "}
+                      <span className="text-muted-foreground">
+                        {federation.number}
+                      </span>
                     </p>
                     <p>
-                      <span className="font-medium">Data di affiliazione:</span>{" "}
-                      {federation.affiliationDate}
+                      <span className="font-bold bg-background">
+                        Data di affiliazione:
+                      </span>{" "}
+                      <span className="text-muted-foreground">
+                        {federation.affiliationDate}
+                      </span>
                     </p>
                   </div>
                 ))}

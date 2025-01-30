@@ -217,8 +217,6 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
     };
   }, []);
 
-  console.log({ isSidebarOpen, selectedOrganizationId });
-
   return (
     <>
       <div ref={mapContainerRef} className="h-full w-full z-40">
