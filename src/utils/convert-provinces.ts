@@ -47,6 +47,7 @@ export const translateProvinceAbbrevation = (province: string): string => {
     LI: "Livorno",
     LO: "Lodi",
     LU: "Lucca",
+    MB: "Monza e Brianza",
     MC: "Macerata",
     MN: "Mantova",
     MS: "Massa-Carrara",

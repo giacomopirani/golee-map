@@ -143,7 +143,6 @@ const FullscreenMap: React.FC<FullscreenMapProps> = ({
           />
         );
 
-        marker.bindTooltip(org.name);
         marker.bindPopup(popupContent);
 
         marker.on("popupopen", () => {

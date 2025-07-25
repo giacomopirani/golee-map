@@ -16,6 +16,7 @@ import { translateCountryAbbreviation } from "@/utils/convert-country";
 import { translateProvinceAbbrevation } from "@/utils/convert-provinces";
 import { translateRegionAbbreviation } from "@/utils/convert-region";
 import { translateCompetitionLevel } from "@/utils/translate-level";
+import { isValidUrl } from "@/utils/valid-url";
 
 import {
   FaFacebook,
@@ -209,7 +210,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                 <div className="flex gap-4">
                   {Object.entries(organization.socialLinks).map(
                     ([key, value]) =>
-                      value ? (
+                      isValidUrl(value) ? (
                         <a
                           key={key}
                           href={value}
@@ -260,7 +261,7 @@ const SidebarContent = (props: { organization: ClubDetails }) => {
                     organization.affiliate.club_logo_url || "/placeholder.svg"
                   }
                   alt={`Logo ${organization.affiliate.club_name}`}
-                  className="w-16 h-16 object-contain"
+                  className="w-20 h-20 object-contain"
                 />
               )}
               {organization.affiliate.club_link && (

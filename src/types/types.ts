@@ -62,9 +62,9 @@ export interface Colors {
 }
 
 export interface Affiliate {
-  club_logo_url: string | null;
-  club_name: string;
-  club_link: string | null;
+  club_logo_url?: string | null;
+  club_name?: string | null;
+  club_link?: string | null;
 }
 
 export interface Federation {
