@@ -144,8 +144,8 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         {/* Sport più popolari */}
         {topSports.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-              <TrendingUp className="h-4 w-4" />
+            <h4 className="text-sm font-medium text-gray-700 dark:text-slate-400 mb-2 flex items-center gap-1">
+              <TrendingUp className="h-4 w-4 text-red-600" />
               Sport più diffusi
             </h4>
             <div className="space-y-2">
@@ -165,9 +165,13 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
                       }`}
                     />
 
-                    <span className="text-gray-700 capitalize">{sport}</span>
+                    <span className="text-gray-700 dark:text-white capitalize">
+                      {sport}
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-900">{count}</span>
+                  <span className="font-medium text-gray-900 dark:text-white border py-0.5 px-2 rounded-sm">
+                    {count}
+                  </span>
                 </div>
               ))}
             </div>
@@ -177,8 +181,8 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
         {/* Province più rappresentate (solo se ci sono risultati e non stiamo filtrando per provincia) */}
         {topProvinces.length > 0 && topProvinces.length > 1 && (
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
+            <h4 className="text-sm font-medium text-gray-700 dark:text-slate-400 mb-2 flex items-center gap-1">
+              <MapPin className="h-4 w-4 text-red-500" />
               Province principali
             </h4>
             <div className="space-y-2">
@@ -197,9 +201,13 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
                           : "bg-purple-500"
                       }`}
                     />
-                    <span className="text-gray-700 uppercase">{province}</span>
+                    <span className="text-gray-700 uppercase dark:text-white">
+                      {province}
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-900">{count}</span>
+                  <span className="font-medium text-gray-900 dark:text-white border py-0.5 px-2 rounded-sm">
+                    {count}
+                  </span>
                 </div>
               ))}
             </div>
