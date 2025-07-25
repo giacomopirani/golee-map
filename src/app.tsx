@@ -301,7 +301,7 @@ function App() {
       <div className="absolute bottom-4 right-4 z-40 lg:hidden">
         <button
           onClick={() => setShowStats(true)}
-          className="bg-white hover:bg-slate-200 text-gray-500 p-4 rounded-lg shadow-lg transition-colors"
+          className="bg-white hover:bg-slate-200 text-gray-500 dark:bg-black dark:border dark:border-slate-500 p-4 rounded-lg shadow-lg transition-colors"
           title="Mostra statistiche dettagliate"
         >
           <ChartNoAxesCombined size={20} />
