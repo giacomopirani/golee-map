@@ -91,13 +91,15 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
   // Variante dettagliata
   return (
     <div
-      className={`bg-white border border-gray-200 rounded-lg shadow-sm ${className}`}
+      className={`bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-black dark:border-slate-700 ${className}`}
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-100">
+      <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-700">
         <div className="flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-red-500" />
-          <h3 className="font-semibold text-gray-900">Statistiche</h3>
+          <h3 className="font-semibold text-gray-900 dark:text-white">
+            Statistiche
+          </h3>
         </div>
       </div>
 
@@ -105,7 +107,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
       <div className="p-4 space-y-4">
         {/* Contatori principali */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-3 bg-red-50 rounded-lg">
+          <div className="text-center p-3 bg-red-50 dark:bg-slate-900 rounded-lg">
             <div className="flex items-center justify-center gap-1 mb-1">
               <Users className="h-4 w-4 text-red-500" />
               <span className="text-sm font-medium text-red-500">
@@ -117,7 +119,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
             </div>
           </div>
 
-          <div className="text-center p-3 bg-gray-50 rounded-lg">
+          <div className="text-center p-3 bg-gray-50 dark:bg-gray-400 rounded-lg">
             <div className="flex items-center justify-center gap-1 mb-1">
               <MapPin className="h-4 w-4 text-gray-600" />
               <span className="text-sm font-medium text-gray-600">Totali</span>
@@ -130,7 +132,7 @@ const StatsPanel: React.FC<StatsPanelProps> = ({
 
         {/* Filtri attivi indicator */}
         {hasActiveFilters && (
-          <div className="flex items-center gap-2 p-2 bg-orange-50 rounded-lg">
+          <div className="flex items-center gap-2 p-2 bg-orange-50 dark:bg-slate-950 rounded-lg">
             <Filter className="h-4 w-4 text-orange-600" />
             <span className="text-sm text-orange-700">
               Filtri attivi - Mostrando{" "}

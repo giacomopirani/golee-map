@@ -111,9 +111,11 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
         {/* Quick Stats Mobile */}
         {stats && (
-          <div className="flex bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 border text-sm gap-1">
-            <ShieldHalf size={20} color="black" />
-            <span className="font-medium">{stats.filtered}</span>
+          <div className="flex bg-white/90 dark:bg-black backdrop-blur-sm rounded-lg px-3 py-2 border text-sm gap-1">
+            <ShieldHalf size={20} color="red" />
+            <span className="font-medium dark:text-slate-600">
+              {stats.filtered}
+            </span>
             <span className="text-gray-600 ml-1">
               {stats.hasActiveFilters && stats.filtered !== stats.total
                 ? `di ${stats.total} società`

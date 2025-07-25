@@ -214,6 +214,26 @@ function App() {
             </div>
           </div>
         </div>
+        {/* Barra risultati */}
+        {stats.hasActiveFilters && (
+          <div className="px-4 pb-2 ">
+            <div className="max-w-7xl mx-auto">
+              <div className="bg-white/90 dark:bg-black backdrop-blur-sm rounded-lg px-4 py-2 shadow-sm border">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">
+                    Risultati: <strong>{filteredOrganizations.length}</strong>{" "}
+                    società su {stats.total}
+                  </span>
+                  {filteredOrganizations.length === 0 && (
+                    <span className="text-red-600">
+                      Nessun risultato trovato
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Stats Panel (Desktop - Sidebar) */}
@@ -256,7 +276,7 @@ function App() {
           onClick={() => setShowStats(false)}
         >
           <div
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl p-4 max-h-[70vh] overflow-y-auto"
+            className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black rounded-t-xl p-4 max-h-[70vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
