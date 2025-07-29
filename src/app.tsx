@@ -298,7 +298,7 @@ function App() {
       )}
 
       {/* Mobile Stats Toggle Button */}
-      <div className="absolute bottom-5 right-5 z-40 lg:hidden">
+      <div className="absolute top-3 right-3 z-50 lg:hidden">
         <button
           onClick={() => setShowStats(true)}
           className="bg-white hover:bg-slate-200 text-gray-500 dark:bg-black dark:border dark:border-slate-500 p-4 rounded-lg shadow-lg transition-colors"
